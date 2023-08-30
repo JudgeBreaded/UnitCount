@@ -21,6 +21,14 @@ module.exports = {
       unitPoint: {
         type: Sequelize.INTEGER
       },
+      armyId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Armies',
+          key: 'id'
+      }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

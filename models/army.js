@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Army.belongsTo(models.User, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE'
+      })
+      Army.hasMany(models.Unit, {
+        foreignKey: 'armyId',
+        onDelete: 'CASCADE'
+      })
     }
   }
   Army.init({
