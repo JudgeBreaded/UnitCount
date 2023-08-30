@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const { Op } = require("sequelize")
-const { User } = require('./models')
+const { User, Army, Unit } = require('./models')
 
 
 
@@ -12,9 +12,10 @@ app.listen(3000, () => {
     console.log("server listening on port 3000")
 })
 
-app.get("/users", (req, res) => {
-
-})
+app.get('/users', async (req, res) => {
+    const users = await User.findAll();
+    res.json(users);
+});
 
 app.post("/login/register", (req, res) => {
     const {firstName, lastName, email, location, favfaction } = req.body
@@ -33,3 +34,17 @@ app.post("/login/register", (req, res) => {
         res.json(new_user)
             })
 })
+
+app.post('/users/:id', async (req, res) => {
+    const { id } = req.params;
+    
+    // Assuming that `req.body` is limited to
+    // the keys firstName, lastName, and email
+    const updatedUser = await User.update(req.body, {
+    where: {
+        id
+    }
+    });
+    
+    res.json(updatedUser);
+});
