@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "ichzsctu",
+    "password": "85BzuaHHqdqU9MPmGEcDcOGxcraBsxfR",
+    "database": "ichzsctu",
+    "host": "berry.db.elephantsql.com",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "ichzsctu",
+    "password": null,
+    "database": "ichzsctu",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
