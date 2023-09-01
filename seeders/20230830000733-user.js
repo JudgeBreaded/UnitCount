@@ -16,6 +16,7 @@ module.exports = {
       firstName: 'John',
       lastName: 'Warhammer',
       email: 'ilovemarines@warhammer.com',
+      password: "$2b$10$aTFSnR7oF2OXK9es7kGW0.vAEHtRnzBNcWGKFEewvTO2e753f/GEy",
       location: 'Atlanta',
       favfaction: 'Space Marines',
       createdAt: new Date(),
