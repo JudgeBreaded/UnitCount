@@ -17,6 +17,7 @@ module.exports = {
       unitType: 'Infantry',
       unitTier: 4,
       unitPoint: 95,
+      armyId: 1, 
       createdAt: new Date(),
       updatedAt: new Date()
     }], {})

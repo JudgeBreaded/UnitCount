@@ -15,6 +15,7 @@ module.exports = {
     await queryInterface.bulkInsert('Users', [{
       firstName: 'John',
       lastName: 'Warhammer',
+      userName: 'Salamdeer',
       email: 'ilovemarines@warhammer.com',
       password: "$2b$10$aTFSnR7oF2OXK9es7kGW0.vAEHtRnzBNcWGKFEewvTO2e753f/GEy",
       location: 'Atlanta',

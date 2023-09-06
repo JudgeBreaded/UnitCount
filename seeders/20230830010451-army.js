@@ -16,6 +16,7 @@ module.exports = {
       title: 'Mortarians',
       faction: 'Death Guard',
       totalPoints: 1000,
+      userId: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {})

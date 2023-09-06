@@ -1,0 +1,10 @@
+<h1>${username}'s army</h1>
+${armies.map(army => `
+    <div class="row">
+        <div class="col-4">${army.title}</div>
+        <div class="col-12"></div>
+        <div class="col-3">${army.faction}</div>
+        <div class="col-3">${army.totalPoints}</div>
+    </div>
+    
+    `).join('')}
