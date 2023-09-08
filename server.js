@@ -5,10 +5,13 @@ const cookieParser = require("cookie-parser")
 const session = require("express-session")
 const sessionStore = require('express-session-sequelize')(session.Store)
 const bcrypt = require('bcrypt')
+const path = require('path')
 const es6Renderer = require('express-es6-template-engine');
 const { User, Army, Unit, sequelize } = require('./models')
 const army = require('./models/army')
+const { Script } = require('vm')
 const saltRounds = 10
+
 
 
 
@@ -17,9 +20,9 @@ const sequelizeSessionStore = new sessionStore({
 });
 
 app.engine('html', es6Renderer);
-app.set('views', './views');
+app.set('views', '.public/views');
 app.set('view engine', 'html')
-
+app.use(express.static('public'))
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({
@@ -32,9 +35,9 @@ app.use(session({
     saveUninitialized: true,
 }))
 
-app.get('/', async (req,res)=> res.render('template', {
+app.get('login/public/script', async (req, res) => res.render('template', {
     locals: {
-        title:"Welcome!"
+        title: "Welcome!"
     },
     partials: {
         body: 'partials/userLogin'
@@ -42,31 +45,11 @@ app.get('/', async (req,res)=> res.render('template', {
 })
 )
 //homepage
-app.get('/homepage/:id', async (req, res) => {
-    const users = await User.findByPk(req.params.id, { include: Army
-        // where: {id : id}, include: [{
-        //     model: Army}]
-
-    }).then(function(user){
-    console.log(JSON.stringify(user,null, 2))
-    res.render('template', {
-        locals: {
-            title: user.firstName,
-            username: user.firstName,
-            armies: user.Armies
-        },
-        partials: {
-            body: 'partials/userSpread'
-        }
-    })
-    })
-    // res.json(users);
-});
-
 app.get("/register", (req, res) => {
     res.render('template', {
         locals: {
-            title:"Registration"
+            title: "Registration",
+            
         },
         partials: {
             body: 'partials/userRegister'
@@ -98,23 +81,23 @@ app.post("/register", (req, res) => {
 })
 //create a new army
 app.post('/armygen/', (req, res) => {
-    const {title, faction, totalPoints, userId} = req.body
+    const { title, faction, totalPoints, userId } = req.body
 
-    if (!title && !totalPoints){
-        return res.json({err: "Enter your army name and point total"})
+    if (!title && !totalPoints) {
+        return res.json({ err: "Enter your army name and point total" })
     }
     Army.create({
         title: title,
-        faction: faction, 
+        faction: faction,
         totalPoints: totalPoints,
-        userId : userId,
+        userId: userId,
     }).then((new_army) => {
         res.json(new_army)
     })
 })
 //Get all Armys
 app.get('/army', (req, res) => {
-    const {title, faction, totalPoints} = req.body
+    const { title, faction, totalPoints } = req.body
 
 })
 
@@ -123,10 +106,10 @@ app.put('/army', (req, res) => {
 })
 //create new unit
 app.post('/unit/', (req, res) => {
-    const {unitName, unitType, unitTier, unitPoint, armyId} = req.body
+    const { unitName, unitType, unitTier, unitPoint, armyId } = req.body
 
-    if (!unitName && !unitPoint){
-        return res.json({err: "Enter your units name and unit point amount"})
+    if (!unitName && !unitPoint) {
+        return res.json({ err: "Enter your units name and unit point amount" })
     }
     Unit.create({
         unitName: unitName,
@@ -140,12 +123,12 @@ app.post('/unit/', (req, res) => {
 })
 //updates unit information
 app.put('/unit', (req, res) => {
-    const {unitName, unitType, unitTier, unitPoint} = req.body
+    const { unitName, unitType, unitTier, unitPoint } = req.body
 })
 
 
 //User login
-app.post('/login', (req, res) => {
+app.post('login/public/script.js', (req, res) => {
     const { email, password } = req.body;
 
     User.findOne({
@@ -163,15 +146,39 @@ app.post('/login', (req, res) => {
         if (comparison == true) {
             req.session.userId = user.id
             req.session.username = user.username
-            res.json({success: true })
+            res.json({ success: true, redirect: '/homepage' });
         } else {
             res.json({ success: false })
         }
     })
 })
+
+app.get('/homepage/', async (req, res) => {
+    console.log('User ID from session:', req.session.userId)
+    const userId = req.session.userId;
+    const users = await User.findByPk(userId, {
+        include: Army
+        // where: {id : id}, include: [{
+        //     model: Army}]
+
+    }).then(function (user) {
+        console.log(JSON.stringify(user, null, 2))
+        res.render('template', {
+            locals: {
+                title: user.firstName,
+                username: user.firstName,
+                armies: user.Armies
+            },
+            partials: {
+                body: 'partials/userSpread'
+            }
+        })
+    }) // res.json(users);
+});
+
 //update user email
 app.put('/users', async (req, res) => {
-    if (!req.session.userId){
+    if (!req.session.userId) {
         res.redirect("/login", "redirecting to login screen")
     }
     const id = req.session.userId;
@@ -187,6 +194,16 @@ app.put('/users', async (req, res) => {
         res.json({})
     });;
 });
+
+app.get('/get-session', (req, res) => {
+    const userId = req.session.userId;
+    const username = req.session.username;
+    console.log(userId)
+    res.json({ userId, username });
+});
+
+
 app.listen(3000, () => {
     console.log("server listening on port 3000")
 })
+
