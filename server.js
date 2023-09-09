@@ -20,9 +20,9 @@ const sequelizeSessionStore = new sessionStore({
 });
 
 app.engine('html', es6Renderer);
-app.set('views', '.public/views');
-app.set('view engine', 'html')
-app.use(express.static('public'))
+app.set('views', './public/views');
+app.set('view engine', 'html');
+app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({
@@ -34,8 +34,7 @@ app.use(session({
     store: sequelizeSessionStore,
     saveUninitialized: true,
 }))
-
-app.get('login/public/script', async (req, res) => res.render('template', {
+app.get('', async (req, res) => res.render('template', {
     locals: {
         title: "Welcome!"
     },
@@ -128,7 +127,7 @@ app.put('/unit', (req, res) => {
 
 
 //User login
-app.post('login/public/script.js', (req, res) => {
+app.post('/', (req, res) => {
     const { email, password } = req.body;
 
     User.findOne({

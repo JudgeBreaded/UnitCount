@@ -1,15 +1,16 @@
-document.getElementById('loginPage').addEventListener('submit', (Event) => {
-    Event.preventDefault();
-    const emailInput = document.getElementById('InputEmail').value
-    const passwordInput = document.getElementById('InputPassword').value
+
+document.getElementById('loginPage').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const emailInput = document.getElementById('inputEmail').value
+    const passwordInput = document.getElementById('inputPassword').value
     fetch("/", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            "email": `"${emailInput}"`,
-            "password": `"${passwordInput}"`
+            "email": "ilovemarines@warhammer.com",
+            "password": "sweetlanta"
         }),
     })
         .then((response) => {
