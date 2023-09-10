@@ -1,10 +1,48 @@
-<h1>${username}'s army</h1>
-${armies.map(army => `
-    <div class="row">
-        <div class="col-4">${army.title}</div>
-        <div class="col-12"></div>
-        <div class="col-3">${army.faction}</div>
-        <div class="col-3">${army.totalPoints}</div>
+
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-12">
+                <h1>Welcome, User Name</h1>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2>Requestorium</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="armyTitle">Title</label>
+                            <input type="text" class="form-control" id="armyTitle" placeholder="Enter army title">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="faction">Faction</label>
+                            <input type="text" class="form-control" id="faction" placeholder="Enter faction">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="pointValue">Point Value</label>
+                            <input type="text" class="form-control" id="pointValue" placeholder="Enter point value">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Save Army Details</button>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2> Your Units</h2>
+                <!-- You can add units here -->
+            </div>
+        </div>
     </div>
-    
-    `).join('')}
+    <div class="container">
+    <h1>${username}'s Armies</h1>
+    ${armies.map(army => `
+        <div class="row">
+            <div class="col-4">${army.title}</div>
+            <div class="col-3">${army.faction}</div>
+            <div class="col-3">${army.totalPoints}</div>
+            <button class="btn btn-danger" id="${army.id}" onclick="removeItem(${army.id})"> Delete Army</button>
+        </div>
+        
+        `).join('')}
+    </div>

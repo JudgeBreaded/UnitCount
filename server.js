@@ -34,7 +34,7 @@ app.use(session({
     store: sequelizeSessionStore,
     saveUninitialized: true,
 }))
-app.get('', async (req, res) => res.render('template', {
+app.get('/', async (req, res) => res.render('loginTemplate', {
     locals: {
         title: "Welcome!"
     },
@@ -45,7 +45,7 @@ app.get('', async (req, res) => res.render('template', {
 )
 //homepage
 app.get("/register", (req, res) => {
-    res.render('template', {
+    res.render('userTemplate', {
         locals: {
             title: "Registration",
             
@@ -99,9 +99,22 @@ app.get('/army', (req, res) => {
     const { title, faction, totalPoints } = req.body
 
 })
-
+//delete army
+app.delete('/deleteArmy/:id', (req, res) => {
+    const { id } = req.params
+	if (req.session.userId) {
+		Army.destroy({ where: { id } }).then(
+			(results) => {
+				console.log(results);
+				res.json({});
+			}
+		);
+	} else {
+		res.json({ success: false, message: 'Army deletion failed' });
+	}
+});
 app.put('/army', (req, res) => {
-
+    const {title, faction, totalPoints} = req.body
 })
 //create new unit
 app.post('/unit/', (req, res) => {
@@ -151,18 +164,15 @@ app.post('/', (req, res) => {
         }
     })
 })
-
+// Armies and Unit Manager
 app.get('/homepage/', async (req, res) => {
     console.log('User ID from session:', req.session.userId)
     const userId = req.session.userId;
     const users = await User.findByPk(userId, {
         include: Army
-        // where: {id : id}, include: [{
-        //     model: Army}]
-
     }).then(function (user) {
         console.log(JSON.stringify(user, null, 2))
-        res.render('template', {
+        res.render('userTemplate', {
             locals: {
                 title: user.firstName,
                 username: user.firstName,
