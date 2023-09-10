@@ -8,7 +8,7 @@
         <div class="row mt-4">
             <div class="col-12">
                 <h2>Requestorium</h2>
-                <form>
+                <form id="newArmyForm">
                     <div class="form-row">
                         <div class="col-md-4 mb-3">
                             <label for="armyTitle">Title</label>
@@ -16,14 +16,25 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="faction">Faction</label>
-                            <input type="text" class="form-control" id="faction" placeholder="Enter faction">
+                            <select class="form-control" id="faction">
+                                <option>Space Marines</option>
+                                <option>Tyranids</option>
+                                <option>Deathguard</option>
+                            </select>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="pointValue">Point Value</label>
-                            <input type="text" class="form-control" id="pointValue" placeholder="Enter point value">
+                            <select class="form-control" id="pointValue">
+                                <option>250</option>
+                                <option>500</option>
+                                <option>1000</option>
+                                <option>1500</option>
+                                <option>2000</option>
+                            </select>
                         </div>
+                        <button class="btn btn-primary" type="submit" id="armySubmit"> Add Army</button>
                     </div>
-                    <button class="btn btn-primary" type="submit">Save Army Details</button>
+                    
                 </form>
             </div>
         </div>
@@ -41,7 +52,7 @@
             <div class="col-4">${army.title}</div>
             <div class="col-3">${army.faction}</div>
             <div class="col-3">${army.totalPoints}</div>
-            <button class="btn btn-danger" id="${army.id}" onclick="removeItem(${army.id})"> Delete Army</button>
+            <button class="btn btn-danger" id="armyDelete" value="${army.id}" type="submit"> Delete Army</button>
         </div>
         
         `).join('')}

@@ -22,6 +22,7 @@ const sequelizeSessionStore = new sessionStore({
 app.engine('html', es6Renderer);
 app.set('views', './public/views');
 app.set('view engine', 'html');
+app.use(express.static('public'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json());
 app.use(cookieParser());
@@ -80,7 +81,7 @@ app.post("/register", (req, res) => {
 })
 //create a new army
 app.post('/armygen/', (req, res) => {
-    const { title, faction, totalPoints, userId } = req.body
+    const { title, faction, totalPoints} = req.body
 
     if (!title && !totalPoints) {
         return res.json({ err: "Enter your army name and point total" })
@@ -89,7 +90,7 @@ app.post('/armygen/', (req, res) => {
         title: title,
         faction: faction,
         totalPoints: totalPoints,
-        userId: userId,
+        userId: req.session.userId,
     }).then((new_army) => {
         res.json(new_army)
     })
@@ -100,8 +101,8 @@ app.get('/army', (req, res) => {
 
 })
 //delete army
-app.delete('/deleteArmy/:id', (req, res) => {
-    const { id } = req.params
+app.delete('/deleteArmy/', (req, res) => {
+    const { id } = req.body
 	if (req.session.userId) {
 		Army.destroy({ where: { id } }).then(
 			(results) => {
@@ -182,7 +183,7 @@ app.get('/homepage/', async (req, res) => {
                 body: 'partials/userSpread'
             }
         })
-    }) // res.json(users);
+    })
 });
 
 //update user email

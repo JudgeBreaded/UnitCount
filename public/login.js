@@ -32,3 +32,14 @@ document.getElementById('loginPage').addEventListener('submit', (e) => {
             console.error('Fetch error:', error);
         });
 })
+
+function removeItem(id) {
+    fetch(`"/deleteArmy/"${id}"`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json', // Specify the content type if needed
+            // Add any other headers as needed
+        }
+    }).then(res => res.json())
+
+};
