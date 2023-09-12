@@ -8,8 +8,8 @@ const bcrypt = require('bcrypt')
 const path = require('path')
 const es6Renderer = require('express-es6-template-engine');
 const { User, Army, Unit, sequelize } = require('./models')
-const army = require('./models/army')
 const { Script } = require('vm')
+const req = require('express/lib/request')
 const saltRounds = 10
 
 
@@ -35,39 +35,111 @@ app.use(session({
     store: sequelizeSessionStore,
     saveUninitialized: true,
 }))
-app.get('/', async (req, res) => res.render('loginTemplate', {
-    locals: {
-        title: "Welcome!"
-    },
-    partials: {
-        body: 'partials/userLogin'
+app.get('/', async (req, res) => {
+    if (req.session.userId) {
+        res.redirect('/homepage')
+    }
+    else {
+
+        res.render('loginTemplate', {
+            locals: {
+                title: "Welcome!"
+            },
+            partials: {
+                body: 'partials/userLogin',
+                script: 'partials/partialScripts/userLoginScript'
+            }
+        })
     }
 })
-)
-//homepage
-app.get("/register", (req, res) => {
-    res.render('userTemplate', {
-        locals: {
-            title: "Registration",
-            
-        },
-        partials: {
-            body: 'partials/userRegister'
-        }
+// Load User Data
+app.get("/settings", async (req, res) => {
+    User.findByPk(req.session.userId, {
+
+    }).then(User => {
+        res.render('userTemplate', {
+            locals: {
+                title: "Settings",
+                username: User.userName,
+                email: User.email,
+                favfaction: User.favfaction,
+                firstName: User.firstName,
+                lastName: User.lastName
+            },
+            partials: {
+                body: 'partials/userSettings'
+            }
+        })
     })
+})
+
+//Update User Settings
+app.put('/settings', async (req, res) => {
+    if (req.session.userId) {
+        const { userName, email, firstName, lastName } = req.body;
+        const updateFields = {};
+
+        if (userName) {
+            updateFields.userName = userName;
+        }
+
+        if (email) {
+            updateFields.email = email;
+        }
+
+        if (firstName) {
+            updateFields.firstName = firstName;
+        }
+
+        if (lastName) {
+            updateFields.lastName = lastName;
+        }
+        console.log(updateFields)
+        await User.update(updateFields,
+            { where: { id: req.session.userId } })
+            .then((result) => {
+                if (result[0] === 1) {
+                    console.log('User information updated successfully.');
+                    res.json({});
+                } else {
+                    console.log('User not found or no changes to update.');
+                    res.status(404).json({ error: 'User not found or no changes to update.' });
+                }
+            })
+            .catch((error) => {
+                console.error('Error updating user information:', error);
+                res.status(500).json({ error: 'There was a problem updating your information' });
+            });
+    } else {
+        res.status(401).json({ success: false, message: 'Please login' });
+    }
+});
+// //homepage
+app.get("/register", (req, res) => {
+    if (!req.session.userId) {
+        res.render('loginTemplate', {
+            locals: {
+                title: "Registration",
+
+            },
+            partials: {
+                body: 'partials/userRegister',
+                script: 'partials/partialScripts/userRegisterScript'
+            }
+        })
+    } else {
+    res.redirect('/homepage')
+}
 })
 // Creates new user 
 app.post("/register", (req, res) => {
     const { firstName, lastName, username, email, password, location, favfaction } = req.body
 
-    if (!email || !password || !username) {
-        return res.json({ err: "please provide the required fields" });
-    }
-
     let hashedPassword = bcrypt.hashSync(password, saltRounds);
 
     User.create({
         firstName: firstName,
+        username: username,
         lastName: lastName,
         email: email,
         password: hashedPassword,
@@ -75,13 +147,12 @@ app.post("/register", (req, res) => {
         favfaction: favfaction
 
     }).then((new_user) => {
-        res.json(new_user)
-        res.redirect("/login")
+        res.redirect("/")
     })
 })
 //create a new army
 app.post('/armygen/', (req, res) => {
-    const { title, faction, totalPoints} = req.body
+    const { title, faction, totalPoints } = req.body
 
     if (!title && !totalPoints) {
         return res.json({ err: "Enter your army name and point total" })
@@ -103,19 +174,19 @@ app.get('/army', (req, res) => {
 //delete army
 app.delete('/deleteArmy/', (req, res) => {
     const { id } = req.body
-	if (req.session.userId) {
-		Army.destroy({ where: { id } }).then(
-			(results) => {
-				console.log(results);
-				res.json({});
-			}
-		);
-	} else {
-		res.json({ success: false, message: 'Army deletion failed' });
-	}
+    if (req.session.userId) {
+        Army.destroy({ where: { id } }).then(
+            (results) => {
+                console.log(results);
+                res.json({});
+            }
+        );
+    } else {
+        res.json({ success: false, message: 'Army deletion failed' });
+    }
 });
 app.put('/army', (req, res) => {
-    const {title, faction, totalPoints} = req.body
+    const { title, faction, totalPoints } = req.body
 })
 //create new unit
 app.post('/unit/', (req, res) => {
@@ -141,9 +212,8 @@ app.put('/unit', (req, res) => {
 
 
 //User login
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
     const { email, password } = req.body;
-
     User.findOne({
         where: {
             email: email
@@ -186,24 +256,7 @@ app.get('/homepage/', async (req, res) => {
     })
 });
 
-//update user email
-app.put('/users', async (req, res) => {
-    if (!req.session.userId) {
-        res.redirect("/login", "redirecting to login screen")
-    }
-    const id = req.session.userId;
-    const { email } = req.body
-    const updatedUser = await User.update({ email: email }, {
-        where: {
-            id: id
-        }
-    }
-    ).then((result) => {
-        console.log(result);
 
-        res.json({})
-    });;
-});
 
 app.get('/get-session', (req, res) => {
     const userId = req.session.userId;
@@ -212,8 +265,14 @@ app.get('/get-session', (req, res) => {
     res.json({ userId, username });
 });
 
+app.get('/destroy', (req, res) => {
+    req.session.destroy(function (err) {
+    })
+    res.json("session deleted")
+})
 
 app.listen(3000, () => {
     console.log("server listening on port 3000")
 })
+
 

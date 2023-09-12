@@ -2,19 +2,19 @@
     <div class="container">
         <div class="row mt-4">
             <div class="col-12">
-                <h1>Welcome, User Name</h1>
+                <h1>Welcome ${username}!</h1>
             </div>
         </div>
         <div class="row mt-4">
             <div class="col-12">
-                <h2>Requestorium</h2>
-                <form id="newArmyForm">
+                <h1>Requestorium</h1>
+                <form id="newArmyForm" class="border border-warning rounded p-3">
                     <div class="form-row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3">
                             <label for="armyTitle">Title</label>
                             <input type="text" class="form-control" id="armyTitle" placeholder="Enter army title">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3">
                             <label for="faction">Faction</label>
                             <select class="form-control" id="faction">
                                 <option>Space Marines</option>
@@ -22,7 +22,7 @@
                                 <option>Deathguard</option>
                             </select>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3">
                             <label for="pointValue">Point Value</label>
                             <select class="form-control" id="pointValue">
                                 <option>250</option>
@@ -32,24 +32,17 @@
                                 <option>2000</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary" type="submit" id="armySubmit"> Add Army</button>
-                    </div>
-                    
+                        <button class="btn btn-warning" type="submit" id="armySubmit"> Add Army</button>
+                    </div> 
                 </form>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-12">
-                <h2> Your Units</h2>
-                <!-- You can add units here -->
-            </div>
-        </div>
     </div>
-    <div class="container">
+    <div class="container pt-3">
     <h1>${username}'s Armies</h1>
     ${armies.map(army => `
         <div class="row">
-            <div class="col-4">${army.title}</div>
+            <div class="col-3">${army.title}</div>
             <div class="col-3">${army.faction}</div>
             <div class="col-3">${army.totalPoints}</div>
             <button class="btn btn-danger" id="armyDelete" value="${army.id}" type="submit"> Delete Army</button>

@@ -9,8 +9,8 @@ document.getElementById('loginPage').addEventListener('submit', (e) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            "email": "ilovemarines@warhammer.com",
-            "password": "sweetlanta"
+            "email": emailInput,
+            "password": passwordInput
         }),
     })
         .then((response) => {
@@ -33,6 +33,14 @@ document.getElementById('loginPage').addEventListener('submit', (e) => {
         });
 })
 
+document.getElementById("registerRedirect").addEventListener("click", (e)=>{
+    fetch("/register", {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(res => res.json)
+    .then(data => console.log(data))
+})
 function removeItem(id) {
     fetch(`"/deleteArmy/"${id}"`, {
         method: 'DELETE',

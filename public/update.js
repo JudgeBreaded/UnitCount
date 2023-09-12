@@ -2,6 +2,8 @@
 const armyDelete = document.getElementById('armyDelete')
 const armySubmit = document.getElementById('armySubmit')
 
+
+if (armySubmit){
 armySubmit.addEventListener("click", (e) =>{
     e.preventDefault()
     const armyTitle = document.getElementById("armyTitle").value
@@ -24,23 +26,22 @@ armySubmit.addEventListener("click", (e) =>{
         window.location.reload()
     })
 })
-
+}
 armyDelete.addEventListener("click", (e) => {
     const val = armyDelete.value
     removeItem(val)
 })
+
 function removeItem(id) {
     fetch(`/deleteArmy`, {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json', // You can adjust the content type as needed
-            // Add any other headers if required, such as authentication tokens
+            'Content-Type': 'application/json', 
         },
-        body: JSON.stringify({ id }), // Include the data in the request body
+        body: JSON.stringify({ id }),
     }).then(res => res.json())
     .then(() => {
         window.location.reload()
     })
-    
-
 }
+
