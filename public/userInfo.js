@@ -17,6 +17,13 @@ document.getElementById("userUpdate").addEventListener("click", (e) => {
             lastName: lastName,
         })
     }).then(res => res.json())
-    .then(data => console.log(data))
+    .then(data => {
+        if (data.success) {
+            // Redirect to the URL specified in the JSON response
+            window.location.href = "/settings";
+        } else {
+            // Handle unsuccessful login
+            console.log('Update Failed');
+        }})
     
 })

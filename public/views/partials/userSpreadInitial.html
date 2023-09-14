@@ -1,11 +1,10 @@
-
-    <div class="container">
-        <div class="row mt-4 justify-content-center">
-            <div class="col-12 d-flex justify-content-center align-items-center">
-                <h1>Welcome ${username}!</h1>
-            </div>
+<div class="container">
+    <div class="row mt-4 justify-content-center">
+        <div class="col-12">
+            <h1>Welcome ${username}!</h1>
         </div>
-        <div class="container">
+    </div>
+    <div class="container">
         <div class="row mt-4">
             <div class="col-12">
                 <h1>Requestorium</h1>
@@ -34,7 +33,7 @@
                             </select>
                         </div>
                         <button class="btn btn-warning" type="submit" id="armySubmit"> Add Army</button>
-                    </div> 
+                    </div>
                 </form>
             </div>
         </div>
@@ -42,25 +41,11 @@
 
     <div class="container pt-3">
         <div class="col-12">
-    <h1>${username}'s Armies</h1>
-    <div class="row">
-        <div class="col-3 border border-warning">Army Name</div>
-        <div class="col-3 border border-warning">Faction</div>
-        <div class="col-3 border border-warning">Point Total</div>
-    </div>
-    ${armies.map(army => `
-        <div class="row border border-warning">
-            <div class="col-3">${army.title}</div>
-            <div class="col-3">${army.faction}</div>
-            <div class="col-3">${army.totalPoints}</div>
-            <button class="btn btn-danger armyRemove" id="armyDelete" value="${army.id}" type="submit"> Delete Army</button>
-        </div>
-        ${units.map(unit => `
+            <h1>${username}'s Armies</h1>
             <div class="row">
-                <div class="col-2">${unit.unitName}</div>
+                <div class="col-3 border border-warning">Army Name</div>
+                <div class="col-3 border border-warning">Faction</div>
+                <div class="col-3 border border-warning">Point Total</div>
             </div>
-        `)}
-        `).join('')}  
+        </div>
     </div>
-</div>
-</div>

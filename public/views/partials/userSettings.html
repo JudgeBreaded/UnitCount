@@ -2,21 +2,22 @@
     <h1>${firstName}'s Account</h1>
     <form id="userInfo">
         <div class="form-group">
-            <label for="usernameUpdate"></label>
+            <label for="usernameUpdate">Username</label>
             <input type="text" class="form-control rounded" id="usernameUpdate" name="username" placeholder="${username}">
         </div>
         <div class="form-group">
-            <label for="emailUpdate"></label>
+            <label for="emailUpdate">Email:</label>
             <input type="email" class="form-control rounded" id="emailUpdate" name="email" placeholder="${email}">
         </div>
         <div class="form-group">
-            <label for="firstNameUpdate"></label>
+            <label for="firstNameUpdate">First Name</label>
             <input type="text" class="form-control rounded" id="firstNameUpdate" name="firstName" placeholder="${firstName}">
         </div>
         <div class="form-group">
-            <label for="lastNameUpdate"></label>
+            <label for="lastNameUpdate">Last Name</label>
             <input type="text" class="form-control rounded" id="lastNameUpdate" name="lastName" placeholder="${lastName}">
         </div>
         <button type="button" class="btn btn-primary" id="userUpdate">Update</button>
     </form>
+    <a href="/destroy" type="button" class="btn btn-danger float-right" id="logoutButton" >Logout</a>
 </div>

@@ -100,7 +100,7 @@ app.put('/settings', async (req, res) => {
             .then((result) => {
                 if (result[0] === 1) {
                     console.log('User information updated successfully.');
-                    res.json({});
+                    res.json({success: true, redirect: "/settings" });
                 } else {
                     console.log('User not found or no changes to update.');
                     res.status(404).json({ error: 'User not found or no changes to update.' });
@@ -108,7 +108,7 @@ app.put('/settings', async (req, res) => {
             })
             .catch((error) => {
                 console.error('Error updating user information:', error);
-                res.status(500).json({ error: 'There was a problem updating your information' });
+                res.status(500).json({ error: 'There was a problem updating your information'});
             });
     } else {
         res.status(401).json({ success: false, message: 'Please login' });
@@ -128,10 +128,30 @@ app.get("/register", (req, res) => {
             }
         })
     } else {
-    res.redirect('/homepage')
-}
+        res.redirect('/homepage')
+    }
 })
 // Creates new user 
+// app.post("/register", (req, res) => {
+//     const { firstName, lastName, username, email, password, location, favfaction } = req.body
+
+//     let hashedPassword = bcrypt.hashSync(password, saltRounds);
+
+//     User.create({
+//         firstName: firstName,
+//         username: username,
+//         lastName: lastName,
+//         email: email,
+//         password: hashedPassword,
+//         location: location,
+//         favfaction: favfaction
+
+//     }).then((new_user) => {
+//         res.redirect("/")
+//     })
+// })
+
+
 app.post("/register", (req, res) => {
     const { firstName, lastName, username, email, password, location, favfaction } = req.body
 
@@ -145,9 +165,10 @@ app.post("/register", (req, res) => {
         password: hashedPassword,
         location: location,
         favfaction: favfaction
-
-    }).then((new_user) => {
-        res.redirect("/")
+    })
+    .then((new_user) => {
+        // Handle successful registration
+        res.json({success: true, redirect: "/"});
     })
 })
 //create a new army
@@ -240,22 +261,48 @@ app.get('/homepage/', async (req, res) => {
     console.log('User ID from session:', req.session.userId)
     const userId = req.session.userId;
     const users = await User.findByPk(userId, {
-        include: Army
-    }).then(function (user) {
-        console.log(JSON.stringify(user, null, 2))
-        res.render('userTemplate', {
-            locals: {
-                title: user.firstName,
-                username: user.firstName,
-                armies: user.Armies
-            },
-            partials: {
-                body: 'partials/userSpread'
-            }
-        })
+            include: [
+                {
+                    model: Army,
+                    required: false,
+                    include: [
+                        {
+                            model: Unit
+                        }
+                    ]
+                }
+            ]
+    }).then((user) => {
+        console.log(user)
+        if (user && user.Armies && user.Armies.length > 0) {
+            const armies = user.Armies;
+            const units = armies.map(army => army.Units).flat();
+            console.log(JSON.stringify(user, null, 2));
+            res.render('userTemplate', {
+                locals: {
+                    title: user.firstName,
+                    username: user.firstName,
+                    armies: armies,
+                    units: units
+                },
+                partials: {
+                    body: 'partials/userSpread'
+                }
+            });
+        } else {
+            // Handle the case where there are no armies
+            res.render('userTemplate', {
+                locals: {
+                    title: user.firstName,
+                    username: user.firstName,
+                },
+                partials: {
+                    body: 'partials/userSpreadInitial'
+                }
+            });
+        }
     })
-});
-
+})
 
 
 app.get('/get-session', (req, res) => {
@@ -267,12 +314,15 @@ app.get('/get-session', (req, res) => {
 
 app.get('/destroy', (req, res) => {
     req.session.destroy(function (err) {
+        if (err) {
+            console.error("Error destroying session:", err);
+        } else {
+            // Session is destroyed, now redirect the user
+            res.redirect("/");
+        }
     })
-    res.json("session deleted")
 })
 
 app.listen(3000, () => {
     console.log("server listening on port 3000")
 })
-
-
