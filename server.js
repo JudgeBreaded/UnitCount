@@ -54,6 +54,7 @@ app.get('/', async (req, res) => {
 })
 // Load User Data
 app.get("/settings", async (req, res) => {
+    if(req.session.userId){
     User.findByPk(req.session.userId, {
 
     }).then(User => {
@@ -71,7 +72,9 @@ app.get("/settings", async (req, res) => {
             }
         })
     })
-})
+} else {
+    res.redirect('/')
+}})
 
 //Update User Settings
 app.put('/settings', async (req, res) => {
@@ -167,11 +170,7 @@ app.post('/armygen/', (req, res) => {
         res.json(new_army)
     })
 })
-//Get all Armys
-app.get('/army', (req, res) => {
-    const { title, faction, totalPoints } = req.body
 
-})
 //delete army
 app.delete('/deleteArmy/', (req, res) => {
     const { id } = req.body
@@ -251,6 +250,7 @@ app.post('/', async (req, res) => {
 })
 // Armies and Unit Manager
 app.get('/homepage/', async (req, res) => {
+    if(req.session.userId){
     console.log('User ID from session:', req.session.userId)
     const userId = req.session.userId;
     const users = await User.findByPk(userId, {
@@ -265,7 +265,7 @@ app.get('/homepage/', async (req, res) => {
                     ]
                 }
             ]
-    }).then((user) => {
+        }).then((user) => {
         
             const armies = user.Armies;
             const units = armies.map(army => army.Units).flat();
@@ -283,7 +283,10 @@ app.get('/homepage/', async (req, res) => {
             });
             // Handle the case where there are no armies
             });
-        })
+        }else {
+            res.redirect("/")
+        }
+    })
 
 
 app.get('/get-session', (req, res) => {
@@ -294,6 +297,7 @@ app.get('/get-session', (req, res) => {
 });
 
 app.get('/destroy', (req, res) => {
+    if(req.session.userId){
     req.session.destroy(function (err) {
         if (err) {
             console.error("Error destroying session:", err);
@@ -302,7 +306,9 @@ app.get('/destroy', (req, res) => {
             res.redirect("/");
         }
     })
-})
+} else {
+    res.redirect('/')
+}})
 
 app.listen(3000, () => {
     console.log("server listening on port 3000")
