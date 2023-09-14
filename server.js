@@ -131,26 +131,6 @@ app.get("/register", (req, res) => {
         res.redirect('/homepage')
     }
 })
-// Creates new user 
-// app.post("/register", (req, res) => {
-//     const { firstName, lastName, username, email, password, location, favfaction } = req.body
-
-//     let hashedPassword = bcrypt.hashSync(password, saltRounds);
-
-//     User.create({
-//         firstName: firstName,
-//         username: username,
-//         lastName: lastName,
-//         email: email,
-//         password: hashedPassword,
-//         location: location,
-//         favfaction: favfaction
-
-//     }).then((new_user) => {
-//         res.redirect("/")
-//     })
-// })
-
 
 app.post("/register", (req, res) => {
     const { firstName, lastName, username, email, password, location, favfaction } = req.body
@@ -226,6 +206,19 @@ app.post('/unit/', (req, res) => {
         res.json(new_unit)
     })
 })
+app.delete('/unit/', (req, res) => {
+    const { id } = req.body
+    if (req.session.userId) {
+        Unit.destroy({ where: { id } }).then(
+            (results) => {
+                console.log(results);
+                res.json({});
+            }
+        );
+    } else {
+        res.json({ success: false, message: 'Unit deletion failed' });
+    }
+});
 //updates unit information
 app.put('/unit', (req, res) => {
     const { unitName, unitType, unitTier, unitPoint } = req.body
@@ -273,8 +266,7 @@ app.get('/homepage/', async (req, res) => {
                 }
             ]
     }).then((user) => {
-        console.log(user)
-        if (user && user.Armies && user.Armies.length > 0) {
+        
             const armies = user.Armies;
             const units = armies.map(army => army.Units).flat();
             console.log(JSON.stringify(user, null, 2));
@@ -289,20 +281,9 @@ app.get('/homepage/', async (req, res) => {
                     body: 'partials/userSpread'
                 }
             });
-        } else {
             // Handle the case where there are no armies
-            res.render('userTemplate', {
-                locals: {
-                    title: user.firstName,
-                    username: user.firstName,
-                },
-                partials: {
-                    body: 'partials/userSpreadInitial'
-                }
             });
-        }
-    })
-})
+        })
 
 
 app.get('/get-session', (req, res) => {

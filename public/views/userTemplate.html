@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: white;
+            background-color: grey;
+            color: white;
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
@@ -50,21 +51,29 @@
         .navbar-toggler-icon {
             background-color: gold;
         }
-    </style>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    function openNav() {
-        document.getElementById("mySidebar").style.width = "250px";
-        document.getElementById("mySidebar").style.left = "0";
-        document.getElementsByClassName("content")[0].style.marginLeft = "250px";
-    }
 
-    function closeNav() {
-        document.getElementById("mySidebar").style.width = "0";
-        document.getElementById("mySidebar").style.left = "-250px";
-        document.getElementsByClassName("content")[0].style.marginLeft = "0";
-    }
-</script>
+        /* Add gold borders and rounded corners to the title element */
+        .content nav span {
+            border: 2px solid gold;
+            border-radius: 10px;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("mySidebar").style.left = "0";
+            document.getElementsByClassName("content")[0].style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("mySidebar").style.left = "-250px";
+            document.getElementsByClassName("content")[0].style.marginLeft = "0";
+        }
+    </script>
 </head>
 
 <body>
@@ -72,20 +81,20 @@
     <div class="sidebar" id="mySidebar" style="z-index: 500;">
         <a href="javascript:void(0)" onclick="closeNav()">&#9776; Close</a>
         <a href="/homepage">Armies</a>
-        <a href="">Users</a>
         <a href="/settings">Settings</a>
     </div>
 
     <div class="content" style="margin-left: 0;">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light" style="color: gold;">
             <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Unit Count</span>
         </nav>
     </div>
-    <container style="justify-content: center ;">
+    <container style="justify-content: center;">
         ${body}
     </container>
 
 </body>
 <script type="module" src="../update.js"></script>
 <script type="module" src="../userInfo.js"></script>
+
 </html>
