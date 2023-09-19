@@ -8,10 +8,8 @@ const bcrypt = require('bcrypt')
 const path = require('path')
 const es6Renderer = require('express-es6-template-engine');
 const { User, Army, Unit, sequelize } = require('./models')
-const { Script } = require('vm')
 const req = require('express/lib/request')
 const saltRounds = 10
-
 
 
 

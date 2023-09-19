@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container max-width: 100%">
     <div class="row mt-4 justify-content-center">
         <div class="col-12 d-flex justify-content-center align-items-center">
             <h1>Welcome ${username}!</h1>
         </div>
     </div>
-    <div class="container" >
+    <div class="container max-width: 100%" >
         <div class="row mt-4">
             <div class="col-12">
                 <h1>Requestorium</h1>
@@ -42,26 +42,29 @@
         </div>
     </div>
 
-    <div class="container pt-3">
+    <div class="container pt-3 max-width: 100%">
         <div class="col-12">
             <h1>${username}'s Armies</h1>
-            <div class="row border border-warning text-uppercase text-center" style="background-color: gold; color: black;">
-                <div class="col-3">Army Name</div>
-                <div class="col-3">Faction</div>
-                <div class="col-3">Point Total</div>
-            </div>
         </div>
 
         <div class="container">
             <div class="row">
                 <!-- Iterate through armies -->
                 ${armies.map(army => `
+                    <div class="container pt-3 max-width: 100%">
+                        <div class="col-12">
+                            <div class="row border border-warning text-uppercase text-center" style="background-color: gold; color: black;">
+                                <div class="col-3">Army Name</div>
+                                <div class="col-3">Faction</div>
+                                <div class="col-3">Point Total</div>
+                            </div>
+                        </div>
                 <div class="col-12">
                     <div class="row border border-warning text-center border-radius-5 pt-2">
                         <div class="col-3 text-uppercase">${army.title}</div>
                         <div class="col-3 text-uppercase">${army.faction}</div>
                         <div class="col-3 text-uppercase">${army.totalPoints}</div>
-                        <button class="btn btn-danger armyRemove" id="armyDelete" value="${army.id}" type="submit">
+                        <button class="btn btn-danger col-sm-3 col-12 armyRemove" id="armyDelete" value="${army.id}" type="submit">
                             Delete Army</button>
                     </div>
             <div class="row border border-top-0 text-start text-uppercase" style="background-color: orange;">
@@ -72,7 +75,7 @@
             </div>
                     <!-- Iterate through units within the current army -->
                     ${army.Units.map(unit => `
-                    <div class="row border border warning border-radius-5 mb-2 pt-2 mb-2 text-uppercase unitSpread">
+                    <div class="row border border warning mb-2 pt-2 mb-2 text-uppercase text-start unitSpread">
                         <div class="col">${unit.unitName}</div>
                         <div class="col">${unit.unitType}</div>
                         <div class="col">${unit.unitTier}</div>
@@ -84,23 +87,24 @@
                     <!-- Army-specific form with the army ID -->
                     <form class="unitInfoForm" data-army-id="${army.id}">
                         <div class="row mt-3">
-                            <div class="col">
+                            <div class="col-12 col-md mb-2">
                                 <input type="hidden" name="unitArmyIdHidden" value="${army.id}">
                                 <input type="text" class="form-control unitNameInput" id="unitNameInput" placeholder="Unit Name">
                             </div>
-                            <div class="col">
+                            <div class="col-12 col-md mb-2">
                                 <input type="text" class="form-control unitTypeInput" id="unitTypeInput" placeholder="Unit Type">
                             </div>
-                            <div class="col">
+                            <div class="col-12 col-md mb-2">
                                 <input type="text" class="form-control unitTierInput" id="unitTierInput" placeholder="Unit Tier">
                             </div>
-                            <div class="col">
+                            <div class="col-12 col-md mb-2">
                                 <input type="text" class="form-control unitPointInput" id="unitPointInput" placeholder="Unit Points">
                             </div>
-                            <button class="btn btn-success unitSubmitClass" id="unitInfoSubmit" value="${army.id}">+</button>
+                            <button class="btn btn-success col-12 col-md unitSubmitClass" id="unitInfoSubmit" value="${army.id}">+</button>
                         </div>
                     </form>
                 </div>
+            </div>
                 `).join('')}
             </div>
         </div>
