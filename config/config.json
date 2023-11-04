@@ -11,13 +11,13 @@
     "password": "VGdRBKnajwnsIVCevJK1jDfko-lmVy3a",
     "database": "ichzsctu",
     "host": "berry.db.elephantsql.com",
-    "dialect": "berry.db.elephantsql.com"
+    "dialect": "postgres"
   },
   "production": {
-    "username": "root",
+    "username": "ichzsctu",
     "password": "VGdRBKnajwnsIVCevJK1jDfko-lmVy3a",
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "database": "ichzsctu",
+    "host": "berry.db.elephantsql.com",
     "dialect": "postgres"
   }
 }

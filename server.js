@@ -136,8 +136,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
     const { firstName, lastName, username, email, password, location, favfaction } = req.body
 
-    let hashedPassword = bcrypt.hashSync(password, saltRounds);
-
+    let hashedPassword = bcrypt.hashSync(password, saltRounds);    
     User.create({
         firstName: firstName,
         username: username,
@@ -225,11 +224,8 @@ app.put('/unit', (req, res) => {
 //User login
 app.post('/', async (req, res) => {
     const { email, password } = req.body;
-    User.findOne({
-        where: {
-            email: email
-        }
-    }).then((user) => {
+    User.findByPk(1)
+    .then((user) => {
         if (!user) {
             return res.json({ err: "no user found" });
         }
